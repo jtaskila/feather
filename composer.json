@@ -1,0 +1,16 @@
+{
+    "name": "jtaskila/feather",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Juho Taskila",
+            "email": "juho.taskila@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Feather\\": "src/",
+            "App\\": "App/"
+        }
+    }
+}
