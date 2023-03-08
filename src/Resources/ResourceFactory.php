@@ -16,8 +16,11 @@ class ResourceFactory
         $this->featherDi = $featherDi;        
     }
 
-    public function create(string $class, array $params = []) : Resource
+    public function create(string $class, array $params = []): Resource
     {
-        return $this->featherDi->getUnique($class, $params);
+        /** @var Resource $resource */
+        $resource = $this->featherDi->getUnique($class, $params);
+
+        return $resource;
     }
 }

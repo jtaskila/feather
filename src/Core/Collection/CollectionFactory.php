@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Feather\Core;
+namespace Feather\Core\Collection;
+
+use Feather\Core\FeatherDi;
 
 class CollectionFactory
 {

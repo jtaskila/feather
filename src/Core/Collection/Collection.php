@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Feather\Core;
+namespace Feather\Core\Collection;
 
 /**
 * This is a base collection class with basic methods for
@@ -32,7 +32,7 @@ class Collection
     */
     private function checkStrictTypes($element)
     {
-        if ($this->strict and gettype($element) !== $this->type and !($element instanceof $this->type)){
+        if ($this->strict && gettype($element) !== $this->type && !($element instanceof $this->type)){
             $typeString = (gettype($element) == 'object') ? get_class($element) : gettype($element);
             throw new \InvalidArgumentException('Collection element type mismatch, expecting: '.$this->type.', got '.$typeString.' instead.');
         }
@@ -41,7 +41,7 @@ class Collection
     /**
      * Get the collection type, returns null if type is not set
      */
-    public function getType() : ?string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -49,7 +49,7 @@ class Collection
     /**
     * Return all items as assosiative array
     */
-    public function items() : array
+    public function items(): array
     {
         return $this->data;
     }
@@ -57,7 +57,7 @@ class Collection
     /**
     * Get the first item of the collection
     */
-    public function first() : mixed{
+    public function first(): mixed{
         if (array_key_exists(0, $this->data)) {
             return $this->data[0];
         }
@@ -66,7 +66,7 @@ class Collection
     /**
     * Get the last item of the collection
     */
-    public function last() : mixed
+    public function last(): mixed
     {
         if (array_key_exists(-1, $this->data)) {
             return $this->data[-1];
@@ -76,7 +76,7 @@ class Collection
     /**
     * Return only the valus as normal array
     */
-    public function values() : array
+    public function values(): array
     {
         return array_values($this->data);
     }
@@ -84,7 +84,7 @@ class Collection
     /**
     * Get the number of elements in collection
     */
-    public function count() : int
+    public function count(): int
     {
         return count($this->data);
     }
@@ -92,7 +92,7 @@ class Collection
     /**
     * Add element to collection and specify a key for it
     */
-    public function add($key, $element) : void
+    public function add($key, $element): void
     {
         $this->checkStrictTypes($element);
 
@@ -106,7 +106,7 @@ class Collection
     * Add multiple elements from a key, value array.
     * Overwriting keys is not permitted.
     */
-    public function addMany(array $elements) : void
+    public function addMany(array $elements): void
     {
         foreach ($elements as $key => $element) {
             $this->add($key, $element);
@@ -116,7 +116,7 @@ class Collection
     /**
     * Append an element to collection. The key is assigned automatically
     */
-    public function append($element) : void
+    public function append($element): void
     {
         $this->checkStrictTypes($element);
         $this->data[] = $element;
@@ -125,7 +125,7 @@ class Collection
     /**
     * Append many elements to collection.
     */
-    public function appendMany(array $elements) : void
+    public function appendMany(array $elements): void
     {
         foreach (array_values($elements) as $element) {
             $this->append($element);
@@ -135,7 +135,7 @@ class Collection
     /**
     * Replace an element in the collection by key
     */
-    public function replace($key, $element, $safe = true) : void
+    public function replace($key, $element, $safe = true): void
     {
         if (!array_key_exists($key, $this->data) && $safe) {
             throw new \OutOfRangeException("Collection key: ".$key." does not exist!");
@@ -147,7 +147,7 @@ class Collection
     /**
     * Remove element from collection by key
     */
-    public function remove($key) : void
+    public function remove($key): void
     {
         if (array_key_exists($key, $this->data)) {
             array_splice($this->data, $key, 1);

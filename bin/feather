@@ -1,0 +1,15 @@
+<?php declare(strict_types = 1);
+/**
+ * File for bootstrapping the actual application
+ * to the command line
+ */
+define('FEATHER_CLI_MODE', true);
+require_once __DIR__.'/../index.php';
+
+use Feather\Core\FeatherDi;
+use Feather\Console\Cli;
+
+$di = FeatherDi::getInstance();
+/** @var Cli */
+$cli = $di->get(Cli::class);
+$cli->run();

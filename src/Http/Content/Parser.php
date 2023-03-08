@@ -2,8 +2,13 @@
 
 namespace Feather\Http\Content;
 
-use Feather\Http\Data\ContentType;
+use Feather\Core\FeatherDi;
 
+/**
+ * Class for handling request body parsing,
+ * matches request content-type to a parser 
+ * declared by DI configuration.
+ */
 class Parser 
 {
     /**
@@ -14,20 +19,23 @@ class Parser
     public function __construct(
         array $parsers = []
     ) {
-        $this->parsers = $parsers;
+        $this->parsers = $this->initParsers($parsers);
     }
 
     public function parse(string $contentType, mixed $body ) : array  
     {
-        switch ($contentType) {
-            case ContentType::JSON:
-                break;
-            case ContentType::FORM:
-                break;
-            case ContentType::MULTIPART:
-                break;
+        foreach ($this->parsers as $type => $parser) {
+            if ($type === $contentType) {
+                return $parser->parse($body);
+            }
         }
 
         return [];
+    }
+
+    private function initParsers(array $parsers) 
+    {
+        return FeatherDi::getInstance()
+            ->getArray($parsers, ParserInterface::class);
     }
 }

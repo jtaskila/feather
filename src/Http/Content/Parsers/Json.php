@@ -2,12 +2,12 @@
 
 namespace Feather\Http\Content\Parsers;
 
-use ParserInterface;
+use Feather\Http\Content\ParserInterface;
 
 class Json implements ParserInterface
 {
-    public function parse(string $raw) : array 
+    public function parse(string $body) : array 
     {
-        return [];
+        return \json_decode($body, true);
     }
 }

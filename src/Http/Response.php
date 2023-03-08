@@ -5,6 +5,9 @@ namespace Feather\Http;
 use Feather\Http\Data\Charset;
 use Feather\Http\Data\ContentType;
 
+/**
+ * Class which holds the HTTP response
+ */
 class Response 
 {
     private int $status;
@@ -54,12 +57,12 @@ class Response
 
     public function serve() : void 
     {
-        http_response_code($this->status);
+        \http_response_code($this->status);
         
-        header('Content-type: '.$this->contentType.'; charset='.$this->charset);
+        \header('Content-type: '.$this->contentType.'; charset='.$this->charset);
         
         foreach($this->headers as $key => $value) {
-            header($key.': '.$value);
+            \header($key.': '.$value);
         }
 
         if ($this->body !== null) {

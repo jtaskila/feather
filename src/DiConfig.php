@@ -13,9 +13,21 @@ return [
     ],
     \Feather\Http\Content\Parser::class => [
         'parsers' => [
-            ContentType::JSON => '\Feather\Http\Content\Parsers\Json',
-            ContentType::FORM => '\Feather\Http\Content\Parsers\Form',
-            ContentType::MULTIPART => '\Feather\Http\Content\Parsers\Multipart',
+            ContentType::JSON => '\Feather\Http\Content\Parsers\Json'
         ],
-    ],    
+    ],
+    \Feather\Database\Data\Credentials::class => [
+        'host' => 'localhost',
+        'database' => 'feather',
+        'username' => 'root',
+        'password' => ''
+    ],
+    \Feather\Database\DataRepository::class => [
+        'primaryColumn' => 'id'
+    ],
+    \Feather\Console\Cli::class => [
+        'commands' => [
+            'version' => \Feather\Console\Commands\Version::class 
+        ]
+    ]
 ];

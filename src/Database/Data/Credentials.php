@@ -2,6 +2,11 @@
 
 namespace Feather\Database\Data;
 
+
+/**
+ * Data class for holding database credentials
+ * Credentials can be injected from DI configuration 
+ */
 class Credentials 
 {
     private string $host;

@@ -2,7 +2,11 @@
 
 namespace App\Resources;
 
+use App\Models\UserAddress;
 use Feather\Api;
+use Feather\Core\FeatherDi;
+use Feather\Database\Query;
+use Feather\Database\DataRepository;
 use Feather\Http\Response;
 use Feather\Http\ResponseFactory;
 use Feather\Http\Data\ContentType;
@@ -11,25 +15,32 @@ use Feather\Resources\Resource;
 
 class Index extends Resource
 {
-    private Request $request;
-    private Api $api;
+    private ResponseFactory $responseFactory;
+    private DataRepository $repository;
+    private FeatherDi $featherDi;
 
     public function __construct(
-        Request $request, 
+        FeatherDi $featherDi, 
         ResponseFactory $responseFactory,
-        Api $api 
+        DataRepository $repository
     ) {
         parent::__construct($responseFactory);
-        
-        $this->request = $request;
-        $this->api = $api;
+        $this->responseFactory = $responseFactory;
+        $this->featherDi = $featherDi;
+        $this->repository = $repository;
     }
 
     public function get() : Response 
     { 
         $response = $this->responseFactory->create(200);
-        $body = ['Feather' => $this->api->getVersion()];
-        $response->setBody(json_encode($body));
+        
+        /** @var UserAddress */
+        $userAddress = $this->featherDi->get(UserAddress::class);
+        $userAddress->setStreet('Testikatu 13')
+            ->setPostalCode('90250')
+            ->setCity('Oulu');
+
+        $response->setBody(json_encode($userAddress->safeSerialize()));
         return $response;
     }
 

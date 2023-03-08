@@ -3,6 +3,7 @@
 namespace Feather\Database;
 
 use Feather\Database\Data\Credentials;
+use Feather\Database\Exceptions\DatabaseException;
 use PDO;
 
 class Connection  
@@ -26,10 +27,11 @@ class Connection
                 $this->connection = new PDO(
                     $this->getDsn(), 
                     $this->credentials->getUsername(), 
-                    $this->credentials->getPassword()
+                    $this->credentials->getPassword(),
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
                 );
             } catch (\PDOException $e) {
-                throw new \Exception('Can not create a database connection');
+                throw new DatabaseException('Can not create a database connection');
             }
         }
         return $this->connection;
@@ -48,8 +50,8 @@ class Connection
      */
     private function getDsn() : string 
     {        
-        return 'mysql:host='.$this->credentials->getHost().
-        ';dbname='.$this->credentials->getDatabase().
-        ';charset='.$this->credentials->getCharset().';';
+        return 'mysql:host='.$this->credentials->getHost() .
+        ';dbname=' . $this->credentials->getDatabase() .
+        ';charset=' . $this->credentials->getCharset() . ';';
     }
 }

@@ -29,11 +29,11 @@ class Request
         ContentParser $contentParser
     ) {        
         $this->contentParser = $contentParser;
-        $this->url = $_SERVER['REQUEST_URI'];
-        $this->uri = $uriFactory->create($_SERVER['REQUEST_URI']);
+        $this->url = $_SERVER['REQUEST_URI'] ?? '';
+        $this->uri = $uriFactory->create($this->url);
         
-        $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->headers = \getallheaders();
+        $this->method = $_SERVER['REQUEST_METHOD'] ?? '';
+        $this->headers = [];
 
         $this->contentType = '';
         if (isset($_SERVER['CONTENT_TYPE'])) {
@@ -46,7 +46,7 @@ class Request
         );
     }
 
-    private function getRequestBody() : mixed 
+    private function getRequestBody() 
     {
         return [];
     }

@@ -2,9 +2,10 @@
 
 namespace Feather\Routing;
 
-use Feather\Core\Collection;
-use Feather\Core\CollectionFactory;
+use Feather\Core\Collection\Collection;
+use Feather\Core\Collection\CollectionFactory;
 use Feather\Http\Request;
+use Feather\Middleware\Manager as MiddlewareManager;
 use Feather\Resources\Resource;
 use Feather\Resources\ResourceFactory;
 use Feather\Routing\Data\Uri\UriFactory;
@@ -17,29 +18,49 @@ class Router
     private ResourceFactory $resourceFactory;
     private UriFactory $uriFactory;
     private UriParamMapper $uriParamMapper;
+    private MiddlewareManager $middlewareManager;
     private Request $request;
+    private array $middleware = [];
 
     public function __construct(
         CollectionFactory $collectionFactory,
         ResourceFactory $resourceFactory,
         UriFactory $uriFactory,
         UriParamMapper $uriParamMapper,
+        MiddlewareManager $middlewareManager,
         Request $request
     ) {
         $this->resources = $collectionFactory->create(Resource::class);        
         $this->resourceFactory = $resourceFactory;
         $this->uriFactory = $uriFactory;
         $this->uriParamMapper = $uriParamMapper;
+        $this->middlewareManager = $middlewareManager;
         $this->request = $request;
     }
 
     /**
      * Initializes and registers a new resource for the Router 
      */
-    public function registerResource(string $uri, string $resourceClass, array $params = []) 
+    public function registerResource(string $uri, string $resourceClass, array $middleware = []) 
     {
-        $resource = $this->resourceFactory->create($resourceClass, $params);
+        $resource = $this->resourceFactory->create($resourceClass);
+        $resource->setMiddleware(
+            \array_merge(
+                $this->middleware, 
+                $this->middlewareManager->initMiddleware(
+                    $middleware
+                )
+            )
+        );
+
         $this->resources->add($uri, $resource);
+    }
+
+    public function setMiddleware(array $middleware): Router 
+    {
+        $this->middleware = $this->middlewareManager->initMiddleware($middleware);
+        
+        return $this;
     }
 
     /**
