@@ -27,13 +27,18 @@ class Request
     public function __construct(
         UriFactory $uriFactory,
         ContentParser $contentParser
-    ) {        
+    ) {   
+        /** If called from cli there is no request */
+        if (defined('FEATHER_CLI_MODE')) {
+            return;
+        }
+
         $this->contentParser = $contentParser;
         $this->url = $_SERVER['REQUEST_URI'] ?? '';
         $this->uri = $uriFactory->create($this->url);
         
         $this->method = $_SERVER['REQUEST_METHOD'] ?? '';
-        $this->headers = [];
+        $this->headers = \getallheaders();
 
         $this->contentType = '';
         if (isset($_SERVER['CONTENT_TYPE'])) {

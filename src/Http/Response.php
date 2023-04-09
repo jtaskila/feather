@@ -27,23 +27,23 @@ class Response
         $this->headers = [];
     }
 
-    public function getStatus() : int 
+    public function getStatus(): int 
     {
         return $this->status;
     }
 
-    public function getBody() : string 
+    public function getBody(): string 
     {
         return $this->body;
     }
 
-    public function addHeader(string $key, string $value) : Response 
+    public function addHeader(string $key, string $value): Response 
     {
         $this->headers[$key] = $value;
         return $this;
     }
 
-    public function setContentType(string $contentType) : Response 
+    public function setContentType(string $contentType): Response 
     {
         $this->contentType = $contentType;
         return $this;
@@ -55,7 +55,7 @@ class Response
         return $this;
     }
 
-    public function serve() : void 
+    public function serve(): void 
     {
         \http_response_code($this->status);
         

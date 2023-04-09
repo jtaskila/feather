@@ -10,6 +10,7 @@ class Connection
 {
     private ?PDO $connection = null; 
     private Credentials $credentials;
+    private bool $transactionOpen = false;
 
     public function __construct(
         Credentials $credentials 
@@ -20,7 +21,7 @@ class Connection
     /**
      * Get the PDO connection or if it doesn't exists yet, create one.
      */
-    public function getConnection() : PDO
+    public function getConnection(): PDO
     {
         if (!$this->connection) {
             try {
@@ -34,7 +35,43 @@ class Connection
                 throw new DatabaseException('Can not create a database connection');
             }
         }
+
         return $this->connection;
+    }
+
+    public function startTransaction(): void 
+    {
+        if ($this->transactionOpen) {
+            throw new DatabaseException('Transaction is already started');
+        }
+        
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+        $this->transactionOpen = true;
+    }
+
+    public function commitTransaction(): void 
+    {
+        if (!$this->transactionOpen) {
+            throw new DatabaseException('No transaction open to commit');
+        }
+
+        $connection = $this->getConnection();
+        $connection->commit();
+
+        $this->transactionOpen = false;
+    }
+
+    public function cancelTransaction(): void 
+    {
+        if (!$this->transactionOpen) {
+            throw new DatabaseException('No transaction open to rollback');
+        }
+
+        $connection = $this->getConnection();
+        $connection->rollBack();
+
+        $this->transactionOpen = false;
     }
 
     /**

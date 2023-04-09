@@ -18,7 +18,7 @@ class Query
     /**
      * Execute a raw SQL query 
      */
-    public function execute(string $query, array $variables = []) : array 
+    public function execute(string $query, array $variables = []): array 
     {
         $pdo = $this->connection->getConnection();
 

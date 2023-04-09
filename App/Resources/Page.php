@@ -11,20 +11,22 @@ use Feather\Templates\Template;
 class Page extends Resource
 {
     private Template $template;
+    private ResponseFactory $responseFactory;
 
     public function __construct(
         ResponseFactory $responseFactory,
         Template $template
     ) {
-        $this->template = $template;
         parent::__construct($responseFactory);
+        $this->responseFactory = $responseFactory;
+        $this->template = $template;
     }
 
     public function get(): Response
     {
         $response = $this->responseFactory->create();
         $response->setContentType(ContentType::HTML);
-        $response->setBody($this->template->toHtml());
+        $response->setBody($this->template->render());
 
         return $response;
     }

@@ -2,18 +2,18 @@
 
 namespace Feather\Core;
 
+use Feather\AppInfo;
 use Feather\Core\Di\Unique;
+use Feather\Core\Di\Stateful;
+use ReflectionException;
 use ReflectionNamedType;
 use Feather\Core\Di\Exceptions\DiException;
 
 /**
  * The main dependency injection container. 
  */
-class FeatherDi
+class FeatherDi implements Stateful
 {
-    const PREFERENCE = 'preference';
-    const CONFIG = 'config';
-
     private static ?FeatherDi $instance = null;
     private array $objects = [];
     private array $config = [];
@@ -28,15 +28,48 @@ class FeatherDi
     public static function getInstance(): FeatherDi
     {
         if (!self::$instance) {
-            $config = require(__DIR__.'/../DiConfig.php');
-            self::$instance = new self();       
-            self::$instance->registerConfig($config);
+            throw new DiException('DI container is not initialized');
         }
+
         return self::$instance;
     }
 
     /**
+     * Initialise the DI container
+     *
+     * @throws DiException
+     */
+    public static function init(string $rootDir): FeatherDi
+    {
+        if(self::$instance) {
+            throw new DiException('DI container is already initialized');
+        }
+
+        self::$instance = new self();
+
+        $config = require(__DIR__.'/../DiConfig.php');
+        self::$instance = new self();
+        self::$instance->registerConfig($config);
+
+        $appInfo = self::$instance->getUnique(AppInfo::class, [
+            'rootDir' => $rootDir,
+            'version' => '0.0.1'
+        ]);
+
+        return self::$instance;
+    }
+
+    /**
+     * Dump the content of the object storage as an array
+     */
+    public function dumpObjectStorage(): array
+    {
+        return $this->objects;
+    }
+
+    /**
      * Register a config object for DI the container
+     *
      * @throws DiException
      */
     public function registerConfig(array $config): void
@@ -48,7 +81,7 @@ class FeatherDi
     }
 
     /**
-     * Returns the current configuration array 
+     * Get the current configuration array
      */
     public function getConfig(): array
     {
@@ -57,6 +90,8 @@ class FeatherDi
 
     /**
      * Get an instance of a class. If instance does not exists, it will be created.
+     *
+     * @throws DiException
      */
     public function get(string $class) 
     {   
@@ -68,7 +103,9 @@ class FeatherDi
     }
 
     /**
-     * Get a unique instance of a class. 
+     * Get a unique instance of a class.
+     *
+     * @throws DiException
      */
     public function getUnique(string $class, array $params = [])
     {
@@ -77,12 +114,14 @@ class FeatherDi
 
     /**
      * Get array of object instances
+     *
+     * @throws DiException
      */
     public function getArray(array $classes, ?string $expect = null): array
     {
         $result = [];
         foreach ($classes as $key => $name) {
-            $object = $this->initObject($name);
+            $object = $this->get($name);
 
             if ($expect) {
                 if (!$object instanceof $expect) {
@@ -97,11 +136,14 @@ class FeatherDi
 
             $result[$key] = $object;
         }
+
         return $result;
     }
 
     /**
      * Instantiate a object from given class name.
+     *
+     * @throws DiException
      */
     private function initObject(string $class, array $params = [], bool $unique = false) 
     {
@@ -169,7 +211,7 @@ class FeatherDi
                     $dependencies[] = $params[$name];
                 } else {
                     if (!$param->isOptional()) {
-                        throw new DiException('Missing parameter in object instantiation: '.$class.', '.$name);
+                        throw new DiException('Missing parameter in object instantiation: '.$class.': "'.$name.'"');
                     }
                 }
             }
@@ -178,6 +220,12 @@ class FeatherDi
         /**
          * Return the object with generated dependencies 
          */
-        return $reflectionClass->newInstance(...$dependencies);     
+        try {
+            $class = $reflectionClass->newInstance(...$dependencies);
+        } catch (ReflectionException $e) {
+            throw new DiException($e->getMessage());
+        }
+
+        return $class;
     }
 }

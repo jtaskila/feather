@@ -16,31 +16,22 @@ use Feather\Resources\Resource;
 class Index extends Resource
 {
     private ResponseFactory $responseFactory;
-    private DataRepository $repository;
+
     private FeatherDi $featherDi;
 
     public function __construct(
         FeatherDi $featherDi, 
-        ResponseFactory $responseFactory,
-        DataRepository $repository
+        ResponseFactory $responseFactory
     ) {
         parent::__construct($responseFactory);
         $this->responseFactory = $responseFactory;
         $this->featherDi = $featherDi;
-        $this->repository = $repository;
     }
 
-    public function get() : Response 
+    public function get(): Response
     { 
         $response = $this->responseFactory->create(200);
-        
-        /** @var UserAddress */
-        $userAddress = $this->featherDi->get(UserAddress::class);
-        $userAddress->setStreet('Testikatu 13')
-            ->setPostalCode('90250')
-            ->setCity('Oulu');
-
-        $response->setBody(json_encode($userAddress->safeSerialize()));
+        $response->setBody(json_encode(['message' => 'index']));
         return $response;
     }
 

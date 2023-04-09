@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * File for bootstrapping the actual application
  * to the command line
@@ -10,6 +10,6 @@ use Feather\Core\FeatherDi;
 use Feather\Console\Cli;
 
 $di = FeatherDi::getInstance();
-/** @var Cli */
+/** @var Cli $cli */
 $cli = $di->get(Cli::class);
 $cli->run();

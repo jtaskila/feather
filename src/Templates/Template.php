@@ -4,9 +4,9 @@ namespace Feather\Templates;
 
 use Feather\Core\Di\Unique;
 
-class Template implements Unique
+class Template
 {
-    public function toHtml(): string
+    public function render(): string
     {
         return '<h1>This is a template</h1>';
     }

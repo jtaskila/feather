@@ -10,32 +10,61 @@ use Feather\Api;
 use App\Resources\Index;
 use App\Resources\Page;
 use Feather\AppInterface;
-use Feather\Middleware\Forbidden;
+use Feather\Middleware\Default\BasicAuth;
+use Feather\Database\Schema\Migrator;
+use Feather\Database\Schema\Table;
 
 class App implements AppInterface
 {
     private Api $api;
+    private Migrator $migrator;
+    private BasicAuth $basicAuth;
 
     public function __construct(
-        Api $api 
+        Api $api,
+        Migrator $migrator,
+        BasicAuth $basicAuth
     ) {
-        $this->api = $api;        
+        $this->api = $api;
+        $this->migrator = $migrator;
+        $this->basicAuth = $basicAuth;
     }
     
-    public function setup() : void 
+    public function setup(): void
     {   
-        $this->api->router->setMiddleware([Forbidden::class]);
-        $this->api->router->registerResource('/', Index::class);
+        /**
+         * Configure app
+         */
+         $this->api->setRootDir(__DIR__);
+         $this->api->setDebugMode(true);
+
+        /**
+         * Configure middleware
+         */
+        $this->basicAuth->setRealm('test')
+            ->setUser('test')
+            ->setPassword('test');
+
+        /**
+         * Register database tables
+         */
+        $this->migrator->registerTable(Table::class);
+
+        /**
+         * Register middleware and routes
+         */
+        //$this->api->router->setMiddleware([BasicAuth::class]);
+        $this->api->router->registerResource('/user', Index::class);
         $this->api->router->registerResource('/page', Page::class);
     }
 
-    public function run() : void 
+    public function run(): void
     {
-       $this->api->run(true);
+       $this->api->run();
     }
 }
 
-$di = FeatherDi::getInstance();
+$di = FeatherDi::init(__DIR__);
 $app = $di->get(App::class);
 $app->setup();
 $app->run();

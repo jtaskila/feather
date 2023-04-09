@@ -24,18 +24,21 @@ class UriFactory
     /**
      * Create an Uri object instance from URL string 
      */
-    public function create(string $url) : Uri 
+    public function create(string $url): Uri 
     {
         $uri = $this->builder->getExplodedUri($url);
         $query = $this->builder->getExplodedQueryParams($url);
 
-        return $this->featherDi->getUnique(Uri::class, 
+        /** @var Uri $uri */
+        $uri = $this->featherDi->getUnique(Uri::class, 
             [
                 'uri' => $uri, 
                 'query' => $query,
                 'params' => []
             ]
         );
+
+        return $uri;
     }
 
     /**

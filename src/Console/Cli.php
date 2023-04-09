@@ -32,10 +32,16 @@ class Cli
 
     public function run()
     {
-        print_r($this->command);
+        if (empty($this->command)) {
+            throw new \Exception('No command input detected');
+        }
+
         /** @var CommandInterface $command */
         foreach ($this->commands as $command) {
-            echo $command->getName() . ': '. $command->getHelp() . PHP_EOL;
+            if ($command->getName() === $this->command) {
+                $command->execute('asd');
+                break;
+            }
         }
     }
 }

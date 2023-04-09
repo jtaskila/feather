@@ -22,12 +22,10 @@ return [
         'username' => 'root',
         'password' => ''
     ],
-    \Feather\Database\DataRepository::class => [
-        'primaryColumn' => 'id'
-    ],
     \Feather\Console\Cli::class => [
         'commands' => [
-            'version' => \Feather\Console\Commands\Version::class 
+            'version' => \Feather\Console\Commands\Version::class,
+            'db:migrate' => \Feather\Console\Commands\DatabaseMigrate::class,
         ]
     ]
 ];

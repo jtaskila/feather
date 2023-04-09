@@ -15,6 +15,7 @@ class Api
     private ResponseFactory $responseFactory;
     private bool $debug = false;
     private string $version;
+    private ?string $rootDir = null;
 
     public function __construct(
         Router $router,
@@ -28,16 +29,13 @@ class Api
         $this->version = $version;
     }
 
-    public function getVersion() : string 
+    public function run() 
     {
-        return $this->version;
-    }
+        if (!$this->rootDir) {
+            throw new \Exception('Root directory is not set');
+        }
 
-    public function run(bool $debug = false) 
-    {
-        $this->debug = $debug;
-
-        if (defined('FEATHER_CLI_MODE') && FEATHER_CLI_MODE === true) {
+        if (defined('FEATHER_CLI_MODE')) {
             return;
         }
 
@@ -68,5 +66,43 @@ class Api
             )->serve();
             
         }
+    }
+
+    /** 
+     * Get Feather version
+     */
+    public function getVersion(): string 
+    {
+        return $this->version;
+    }
+
+    /** 
+     * Set projects root directory 
+     */
+    public function setRootDir(string $rootDir): Api 
+    {
+        $this->rootDir = $rootDir;
+
+        return $this;
+    }
+
+    /**
+     * Get the project root directory 
+     */
+    public function getRootDir(): ?string 
+    {
+        return $this->rootDir;
+    }
+
+    public function setDebugMode(bool $debug): Api 
+    {
+        $this->debug = $debug;
+
+        return $this;
+    }
+
+    public function getDebugMode(): bool 
+    {
+        return $this->debug;
     }
 }

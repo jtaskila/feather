@@ -1,11 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Feather\Middleware;
+namespace Feather\Middleware\Default;
 
 use Feather\Http\Data\Status;
 use Feather\Http\Request;
 use Feather\Http\Response;
 use Feather\Http\ResponseFactory;
+use Feather\Middleware\MiddlewareInterface;
 
 class Forbidden implements MiddlewareInterface
 {
