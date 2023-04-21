@@ -2,7 +2,7 @@
 
 namespace Feather\Routing\Data\Uri;
 
-use Feather\Routing\Data\Uri\Uri;
+use Exception;
 
 /**
  * Utility class to map uri params from real uri based the defined and matched uri
@@ -20,14 +20,17 @@ class UriParamMapper
         $this->uriFactory = $uriFactory;
     }
 
-    public function mapParams(Uri $uri, Uri $resourceUri) : Uri 
+    /**
+     * @throws Exception
+     */
+    public function mapParams(Uri $uri, Uri $resourceUri): Uri
     {
         $uriArray = $uri->getUri();
         $params = [];
         $count = 0;
 
         if (\count($uri->getUri()) !== \count($resourceUri->getUri())) {
-            throw new \Exception('Uri length mismatch in param mapping');
+            throw new Exception('Uri length mismatch in param mapping');
         }
 
         foreach ($resourceUri->getUri() as $item) {
@@ -66,6 +69,7 @@ class UriParamMapper
         } else {
             return false;
         }
+
         return true;
     }
 

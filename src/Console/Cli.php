@@ -27,6 +27,7 @@ class Cli
         global $argv;
         $args = $argv;
         unset($args[0]);
+
         return $args;
     }
 

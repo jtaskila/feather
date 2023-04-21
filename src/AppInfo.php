@@ -13,13 +13,21 @@ class AppInfo implements Singleton
 {
     private string $rootDir;
     private string $version;
+    private string $baseUrl;
 
     public function __construct(
         string $rootDir,
-        string $version
+        string $version,
+        string $baseUrl = ''
     ) {
         $this->rootDir = $rootDir;
         $this->version = $version;
+        $this->baseUrl = $baseUrl;
+
+        if (empty($baseUrl)) {
+            $this->baseUrl = $_SERVER['PHP_SELF'];
+        }
+
     }
 
     public function getRootDir(): string
@@ -30,5 +38,10 @@ class AppInfo implements Singleton
     public function getFeatherVersion(): string
     {
         return $this->version;
+    }
+
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
     }
 }

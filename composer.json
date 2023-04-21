@@ -12,5 +12,13 @@
             "Feather\\": "src/",
             "App\\": "App/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Feather\\Test\\": "test/"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     }
 }

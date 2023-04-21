@@ -35,7 +35,6 @@ class App implements AppInterface
         /**
          * Configure app
          */
-         $this->api->setRootDir(__DIR__);
          $this->api->setDebugMode(true);
 
         /**
@@ -55,7 +54,7 @@ class App implements AppInterface
          */
         //$this->api->router->setMiddleware([BasicAuth::class]);
         $this->api->router->registerResource('/user', Index::class);
-        $this->api->router->registerResource('/page', Page::class);
+        $this->api->router->registerResource('/', Page::class);
     }
 
     public function run(): void

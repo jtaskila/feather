@@ -66,7 +66,7 @@ class Router
     /**
      * Returns the resource which is declared to handle the incoming request 
      */
-    public function getResource() : Resource
+    public function getResource(): Resource
     {
         $requestUri = $this->uriFactory->create($this->request->getUrl());
 

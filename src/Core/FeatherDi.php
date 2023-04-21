@@ -15,7 +15,7 @@ use Feather\Core\Di\Exceptions\DiException;
 class FeatherDi implements Stateful
 {
     private static ?FeatherDi $instance = null;
-    private array $objects = [];
+    public array $objects = [];
     private array $config = [];
     private bool $allowConfigs = true;
 
@@ -55,6 +55,9 @@ class FeatherDi implements Stateful
             'rootDir' => $rootDir,
             'version' => '0.0.1'
         ]);
+
+        // TODO: REMOVE THIS EVIL HACK
+        self::$instance->objects[$appInfo::class] = $appInfo;
 
         return self::$instance;
     }

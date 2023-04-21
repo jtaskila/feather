@@ -2,6 +2,7 @@
 
 namespace Feather\Routing\Data\Uri;
 
+use Feather\Core\Di\Exceptions\DiException;
 use Feather\Core\FeatherDi;
 
 /**
@@ -22,7 +23,9 @@ class UriFactory
     }
 
     /**
-     * Create an Uri object instance from URL string 
+     * Create an Uri object instance from URL string
+     *
+     * @throws DiException
      */
     public function create(string $url): Uri 
     {
@@ -42,7 +45,9 @@ class UriFactory
     }
 
     /**
-     * Create an Uri object instance from existing params 
+     * Create an Uri object instance from existing params
+     *
+     * @throws DiException 
      */
     public function createInstance(array $params) 
     {

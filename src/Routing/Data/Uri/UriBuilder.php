@@ -2,19 +2,31 @@
 
 namespace Feather\Routing\Data\Uri;
 
+use Feather\AppInfo;
+
 /**
  * Utility class for creating arrays from URL strings 
  */
 class UriBuilder
 {
+    private AppInfo $appInfo;
+
+    public function __construct(
+        AppInfo $appInfo
+    ) {
+        $this->appInfo = $appInfo;
+    }
+
     /**
      * Returns the URI part of the URL as a string 
      */
-    public function getUriFromUrl(string $url) : string 
+    public function getUriFromUrl(string $url): string
     {
-        $cwd = dirname($_SERVER['PHP_SELF']);
-        $uri = str_replace($cwd, '', $url);
-        return $uri;
+        return \str_replace(
+            $this->appInfo->getBaseUrl(),
+            '',
+            $url
+        );
     }
 
     /**

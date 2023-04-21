@@ -2,12 +2,10 @@
 
 namespace Feather\Templates;
 
-use Feather\Core\Di\Unique;
-
 class Template
 {
     public function render(): string
     {
-        return '<h1>This is a template</h1>';
+        return '<h1>Hello, world!</h1>';
     }
 }
